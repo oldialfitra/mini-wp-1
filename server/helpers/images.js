@@ -5,8 +5,6 @@ const Storage = require("@google-cloud/storage");
 
 const CLOUD_BUCKET = process.env.CLOUD_BUCKET;
 
-console.log(process.env.KEYFILE_PATH)
-
 const storage = new Storage({
     projectId: process.env.GCLOUD_PROJECT,
     keyFilename: process.env.KEYFILE_PATH
