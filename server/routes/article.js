@@ -1,14 +1,18 @@
 const router = require('express').Router(),
-    controllerArticle = require('../controllers/article')
+    controllerArticle = require('../controllers/article'),
+    image = require('../helpers/images'),
+    {authorization} = require('../middleware/auth')
 
-router.post('/', controllerArticle.createArticle)
+router.post('/',image.multer.single('image'), image.sendUploadToGCS, controllerArticle.createArticle)
 
-router.get('/all/:id', controllerArticle.getAllArticle)
+router.get('/', controllerArticle.getAllArticle)
 
-router.get('/one/:id', controllerArticle.getOneArticle)
+router.get('/my', controllerArticle.getMyArticle)
 
-router.put('/:id', controllerArticle.updateArticle)
+router.get('/:id', controllerArticle.getOneArticle)
 
-router.delete('/:id', controllerArticle.deleteArticle)
+router.put('/:id', image.multer.single('image'), image.sendUploadToGCS, authorization, controllerArticle.updateArticle)
+
+router.delete('/:id', authorization, controllerArticle.deleteArticle)
 
 module.exports = router

@@ -1,12 +1,17 @@
 const mongoose = require('mongoose'),
     Schema = mongoose.Schema
 
-const articleSchema = new Schema({
+const tagSchema = new Schema({
     name: {
-        type: String,
-        required: [true, 'title required']
-    }
-})
+        type: String
+    },
+    articles: [{
+        type: Schema.Types.ObjectId,
+        ref: 'mini-wp-article'
+    }]
+}, {
+        timestamps: {}
+    })
 
-const Article = mongoose.model('mini-wp-tag', articleSchema)
-module.exports = Article
+const Tag = mongoose.model('mini-wp-tag', tagSchema)
+module.exports = Tag

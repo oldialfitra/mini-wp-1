@@ -1,61 +1,67 @@
-Vue.component('loginform', {
+Vue.component('login-form', {
     props: ['position'],
     data() {
         return {
-            positionNow: 'login',
             user: {
                 email: '',
                 password: ''
+            },
+            now: {
+                position: ''
             }
         }
     },
     methods: {
-        login() {
-            this.$emit('loginuser', this.user)
+        loginUser() {
+            this.$emit('login-user', this.user)
+            this.user.email = ''
+            this.user.password = ''
         },
-        register() {
-            this.$emit('registeruser', this.user)
-        },
-        changeToSignIn() {
-            this.$emit('changelogin')
-        },
-        changeToSignUp() {
-            this.$emit('changeregister')
+        registerUser() {
+            this.$emit('register-user', this.user)
+            this.now.position = 'login'
+            this.user.email = ''
+            this.user.password = ''
         }
-        
     },
     template: `
     <div class="login-wrap">
         <div class="login-html">
             <div v-if="position==='login'">
-                <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
-                <input id="tab-2" type="radio" name="tab" class="for-pwd" ><label for="tab-2" class="tab">Sign Up</label>
+                <input id="tab-1" type="radio" name="tab" class="sign-in" checked>
+                <label for="tab-1" class="tab">Sign In</label>
+                <input id="tab-2" type="radio" name="tab" class="for-pwd">
+                <label for="tab-2" class="tab">Sign Up</label>
                 <div class="login-form">
                     <div class="sign-in-htm">
-                        <form v-on:submit.prevent="login">
-                            <div class="group">
-                                <label for="user" class="label">Username or Email</label>
-                                <input type="email" class="input" v-model="user.email">
+                        <form v-on:submit.prevent="loginUser">
+                            <div class="group" style="color:black">
+                                <label for="user" class="label">Email</label>
+                                <input type="email" class="input" v-model="user.email" style="color:black" required>
                             </div>
-                            <div class="group">
+                            <div class="group" style="color:black">
                                 <label for="pass" class="label">Password</label>
-                                <input type="password" class="input" data-type="password" v-model="user.password">
+                                <input type="password" class="input" data-type="password"
+                                    v-model="user.password" style="color:black" required>
                             </div>
                             <div class="group">
                                 <input type="submit" class="button" value="Sign In">
                             </div>
-                            <div class="hr"></div>
+                            <div class="hr">
+                                <div id="my-signin2"></div>
+                            </div>
                         </form>
                     </div>
                     <div class="for-pwd-htm">
-                        <form v-on:submit.prevent="register">
-                            <div class="group">
+                        <form v-on:submit.prevent="registerUser">
+                            <div class="group" style="color:black">
                                 <label for="user" class="label">Email</label>
-                                <input type="email" class="input" v-model="user.email">
+                                <input type="email" class="input" v-model="user.email" style="color:black" required>
                             </div>
-                            <div class="group">
+                            <div class="group" style="color:black">
                                 <label for="pass" class="label">Password</label>
-                                <input type="password" class="input" data-type="password" v-model="user.password">
+                                <input type="password" class="input" data-type="password"
+                                    v-model="user.password" style="color:black" required>
                             </div>
                             <div class="group">
                                 <input type="submit" class="button" value="Sign Up">
@@ -66,34 +72,40 @@ Vue.component('loginform', {
                 </div>
             </div>
             <div v-if="position==='register'">
-                <input id="tab-1" type="radio" name="tab" class="sign-in" ><label for="tab-1" class="tab">Sign In</label>
-                <input id="tab-2" type="radio" name="tab" class="for-pwd" checked><label for="tab-2" class="tab">Sign Up</label>
+                <input id="tab-1" type="radio" name="tab" class="sign-in">
+                <label for="tab-1" class="tab">Sign In</label>
+                <input id="tab-2" type="radio" name="tab" class="for-pwd" checked>
+                <label for="tab-2" class="tab">Sign Up</label>
                 <div class="login-form">
                     <div class="sign-in-htm">
-                        <form v-on:submit.prevent="login">
-                            <div class="group">
-                                <label for="user" class="label">Username or Email</label>
-                                <input type="email" class="input" v-model="user.email">
+                        <form v-on:submit.prevent="loginUser">
+                            <div class="group" style="color:black">
+                                <label for="user" class="label">Email</label>
+                                <input type="email" class="input" v-model="email" style="color:black" required>
                             </div>
-                            <div class="group">
+                            <div class="group" style="color:black">
                                 <label for="pass" class="label">Password</label>
-                                <input type="password" class="input" data-type="password" v-model="user.password">
+                                <input type="password" class="input" data-type="password"
+                                    v-model="password" style="color:black" required>
                             </div>
                             <div class="group">
                                 <input type="submit" class="button" value="Sign In">
                             </div>
-                            <div class="hr"></div>
+                            <div class="hr">
+                                <div id="my-signin2"></div>
+                            </div>
                         </form>
                     </div>
                     <div class="for-pwd-htm">
-                        <form v-on:submit="register">
+                        <form v-on:submit="registerUser">
                             <div class="group">
                                 <label for="user" class="label">Email</label>
-                                <input type="email" class="input" v-model="user.email">
+                                <input type="email" class="input" v-model="email" style="color:black" required>
                             </div>
                             <div class="group">
                                 <label for="pass" class="label">Password</label>
-                                <input type="password" class="input" data-type="password" v-model="user.password">
+                                <input type="password" class="input" data-type="password"
+                                    v-model="password" style="color:black" required>
                             </div>
                             <div class="group">
                                 <input type="submit" class="button" value="Sign Up">

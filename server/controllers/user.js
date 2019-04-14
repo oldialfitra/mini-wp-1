@@ -15,7 +15,17 @@ class User {
                 res.status(201).json(newUser)
             })
             .catch(function (err) {
-                res.status(500).json(err)
+                if(err.errors.email) {
+                    res.status(400).json({
+                        message: err.errors.email.message
+                    })
+                } else if(err.errors.password) {
+                    res.status(400).json({
+                        message: err.errors.password.message
+                    })
+                } else {
+                    res.status(500).json(err)
+                }
             })
     }
 
@@ -26,17 +36,18 @@ class User {
             })
             .then(function (uLogin) {
                 if (!uLogin) {
-                    throw new Error({
-                        message: 'Username / password wrong'
+                    res.status(400).json({
+                        message: 'Username or password wrong'
                     })
                 } else {
                     if (!decrypt(req.body.password, uLogin.password)) {
-                        throw new Error({
-                            message: 'Username / password wrong'
+                        res.status(400).json({
+                            message: 'Username or password wrong'
                         })
                     } else {
                         let token = jwt.sign({
-                            email: uLogin.email
+                            email: uLogin.email,
+                            id: uLogin._id
                         }, process.env.SECRET)
                         let obj = {
                             token,
@@ -48,16 +59,12 @@ class User {
             })
             .catch(function (err) {
                 console.log(err)
-                // if (err.message) {
-                //     res.status(404).json(err.errors.message)
-                // }
-                // else {
-                //     res.status(500).json(err)
-                // }
+                res.status(500).json(err)
             })
     }
 
     static signInGoogle(req, res) {
+        console.log('masuk ke controller google')
         var newEmail = ''
         client.verifyIdToken({
             idToken: req.body.idToken,
@@ -96,11 +103,19 @@ class User {
                 res.status(200).json(obj)
             })
             .catch(function (err) {
-                console.log(err)
-                res.status(500).json(err)
+                if (err.errors.email) {
+                    res.status(400).json({
+                        message: err.errors.email.message
+                    })
+                } else if (err.errors.password) {
+                    res.status(400).json({
+                        message: err.errors.password.message
+                    })
+                } else {
+                    res.status(500).json(err)
+                }
             })
     }
-
 }
 
 module.exports = User

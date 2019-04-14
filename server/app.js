@@ -6,7 +6,7 @@ const express = require('express'),
     routerIndex = require('./routes/index')
 cors = require('cors')
 
-mongoose.connect('mongodb://localhost:27017/miny-wp-new', { useNewUrlParser: true })
+mongoose.connect(`mongodb://localhost:27017/${process.env.DBNAME}`, { useNewUrlParser: true })
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(cors())

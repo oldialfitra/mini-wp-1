@@ -10,22 +10,20 @@ const articleSchema = new Schema({
         type: String,
         required: [true, 'content required']
     },
-    created_at: {
-        type: Date,
-        required: [true, 'date created required']
+    featured_image: {
+        type: String,
+        required: [true, 'image required']
     },
-    image: {
-        type: String
-    },
-    userId: {
+    author: {
         type: Schema.Types.ObjectId,
         ref: 'mini-wp-user'
     },
     tags: [{
-        type: Schema.Types.ObjectId,
-        ref: 'mini-wp-tag'
+        type: String
     }]
-})
+}, {
+        timestamps: {}
+    })
 
 const Article = mongoose.model('mini-wp-article', articleSchema)
 module.exports = Article

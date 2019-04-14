@@ -32,166 +32,62 @@
     <script type='text/javascript'
         src='https://cdn.jsdelivr.net/npm/froala-editor@2.9.3/js/froala_editor.min.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@voerro/vue-tagsinput@1.8.0/dist/voerro-vue-tagsinput.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@voerro/vue-tagsinput@1.11.2/dist/style.css">
+
+    <link rel="stylesheet" href="/vueWysiwyg.css">
+
+    <script type='text/javascript'
+        src='//platform-api.sharethis.com/js/sharethis.js#property=5cafc41b8c73c200120fe878&product=inline-share-buttons'></script>
+
     <link rel="stylesheet" href="./assets/style.css">
 </head>
 
 <body>
-    <div id="app">
-        <nav class="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#"><i class="fab fa-wordpress-simple"></i> Mini WP</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto" v-if="isLoggedIn===true">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">
-                            <i class="fa fa-home"></i>
-                            Home
-                            <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fa fa-plus"></i>
-                            Add Article
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fa fa-newspaper"></i>
-                            My Article
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#">
-                            <i class="fa fa-envelope-o">
-                            </i>
-                            Disabled
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-envelope-o">
-                            </i>
-                            Dropdown
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </li>
-                    <form class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                    </form>
-                </ul>
-                <ul class="navbar-nav ">
-                    <li class="nav-item" v-if="isLoggedIn===true">
-                        <a class="nav-link" href="#" v-on:click="logoutUser">
-                            <i class="fas fa-sign-out-alt"></i>
-                            SignOut
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        <div v-if="isLoggedIn===false">
-            <div class="login-wrap">
-                <div class="login-html">
-                    <div v-if="position==='login'">
-                        <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1"
-                            class="tab">Sign In</label>
-                        <input id="tab-2" type="radio" name="tab" class="for-pwd"><label for="tab-2" class="tab">Sign
-                            Up</label>
-                        <div class="login-form">
-                            <div class="sign-in-htm">
-                                <form v-on:submit.prevent="loginUser">
-                                    <div class="group">
-                                        <label for="user" class="label">Email</label>
-                                        <input type="email" class="input" v-model="email">
-                                    </div>
-                                    <div class="group">
-                                        <label for="pass" class="label">Password</label>
-                                        <input type="password" class="input" data-type="password" v-model="password">
-                                    </div>
-                                    <div class="group">
-                                        <input type="submit" class="button" value="Sign In">
-                                    </div>
-                                    <div class="hr"></div>
-                                </form>
-                            </div>
-                            <div class="for-pwd-htm">
-                                <form v-on:submit.prevent="registerUser">
-                                    <div class="group">
-                                        <label for="user" class="label">Email</label>
-                                        <input type="email" class="input" v-model="email">
-                                    </div>
-                                    <div class="group">
-                                        <label for="pass" class="label">Password</label>
-                                        <input type="password" class="input" data-type="password" v-model="password">
-                                    </div>
-                                    <div class="group">
-                                        <input type="submit" class="button" value="Sign Up">
-                                    </div>
-                                    <div class="hr"></div>
-                                </form>
-                            </div>
+    <div id="app">
+        <nav-bar :logged-in="isLoggedIn" @log-out="logoutUser" @show-home="showHome" @show-form="showForm"
+            @my-articles="getMyArticles"></nav-bar>
+        <div class="container">
+            <login-form :position="position" @login-user="loginUser" @register-user="registerUser"
+                v-if="isLoggedIn===false"></login-form>
+            <add-article @add-new-article="addArticle" :all-tags="existTags"></add-article>
+            <update-article :one-article="article" :all-tags="existTags" @update-article="updateArticle">
+            </update-article>
+            <div v-if="position==='home'">
+                <!-- <div :key="item._id"> -->
+                <div class="container">
+                    <div v-if="articles.length > 0">
+                        <div v-for="(item, index) in articles" :key="index">
+                            <all-articles :one-article="item" :index-article="index" :current-user="user"
+                                @delete-one="deleteArticle" @get-one="getOneArticle" @one-tag="getOneTag">
+                            </all-articles>
+                            <!-- <update-article></update-article> -->
                         </div>
                     </div>
-                    <div v-if="position==='register'">
-                        <input id="tab-1" type="radio" name="tab" class="sign-in"><label for="tab-1" class="tab">Sign
-                            In</label>
-                        <input id="tab-2" type="radio" name="tab" class="for-pwd" checked><label for="tab-2"
-                            class="tab">Sign Up</label>
-                        <div class="login-form">
-                            <div class="sign-in-htm">
-                                <form v-on:submit.prevent="loginUser">
-                                    <div class="group">
-                                        <label for="user" class="label">Email</label>
-                                        <input type="email" class="input" v-model="email">
-                                    </div>
-                                    <div class="group">
-                                        <label for="pass" class="label">Password</label>
-                                        <input type="password" class="input" data-type="password" v-model="password">
-                                    </div>
-                                    <div class="group">
-                                        <input type="submit" class="button" value="Sign In">
-                                    </div>
-                                    <div class="hr"></div>
-                                </form>
-                            </div>
-                            <div class="for-pwd-htm">
-                                <form v-on:submit="registerUser">
-                                    <div class="group">
-                                        <label for="user" class="label">Email</label>
-                                        <input type="email" class="input" v-model="email">
-                                    </div>
-                                    <div class="group">
-                                        <label for="pass" class="label">Password</label>
-                                        <input type="password" class="input" data-type="password" v-model="password">
-                                    </div>
-                                    <div class="group">
-                                        <input type="submit" class="button" value="Sign Up">
-                                    </div>
-                                    <div class="hr"></div>
-                                </form>
-                            </div>
+                    <div v-else class="well text-center">
+                        <div class="panel panel-default">
+                            <span>NOT FOUND</span>
                         </div>
                     </div>
                 </div>
+                <!-- </div> -->
             </div>
         </div>
     </div>
-    <script src="https://apis.google.com/js/platform.js"></script>
+    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5cb37f22ec4f3cf9"></script>
+
+    <script src="/vueWysiwyg.js"></script>
     <script src="./js/components/Navbar.js"></script>
     <script src="./js/components/LoginForm.js"></script>
+    <script src="./js/components/FormArticle.js"></script>
+    <script src="./js/components/AllArticles.js"></script>
+    <script src="./js/components/FormUpdate.js"></script>
     <script src="./js/main.js"></script>
-    <script src="./assets/style.js"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=renderButton"></script>
 </body>
 
 </html>

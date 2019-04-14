@@ -35,10 +35,12 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        minlength: [6, 'Minimal 11 digits'],
+        minlength: [6, 'Minimal 6 digits'],
         required: [true, 'password required']
     }
-})
+}, {
+        timestamps: {}
+    })
 
 userSchema.pre('save', function (next) {
     this.password = encrypt(this.password)

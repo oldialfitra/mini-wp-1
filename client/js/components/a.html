@@ -1,0 +1,26 @@
+<div class=" form-wrap well text-center">
+    <h2>Add Article</h2>
+    <form v-on:submit="addArticle">
+        <div class="form-group" style="color:black">
+            <label class="label">Title</label>
+            <input type="text" v-model="article.title" placeholder="Title" class="form-control text-center">
+        </div>
+        <div class="form-group" style="color:black">
+            <label class="label">Content</label>
+            <wysiwyg v-model="article.content" />
+        </div>
+        <div class="form-group" style="color:black">
+            <label class="label">Tags</label>
+            <tags-input element-id="tags" class="form-control text-center" v-model="article.selectedTags"
+                :existing-tags="{'web-development': 'Web Development','php': 'PHP','javascript': 'JavaScript',}"
+                :typeahead="true"></tags-input>
+        </div>
+        <div class="form-group" style="color:black">
+            <label class="label">Image</label>
+            <input type="file" class="mt-3 form-control text-center" id="file" ref="file"></input>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
